@@ -148,14 +148,20 @@ LRESULT WINAPI WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		{
 		case VK_SHIFT:
 			nVirtKey = GetKeyState(VK_LSHIFT);
-			if ((nVirtKey & SHIFTED) == 0) //if LEFT shift key
+			if ((nVirtKey & SHIFTED) == 0) //if LEFT shift key UP
 				vkKeys(VK_LCONTROL) = false;
-			nVirtKey = GetKeyState(VK_RSHIFT);
-			if ((nVirtKey & SHIFTED) == 0)
+			nVirtKey = GetKeyState(VK_RSHIFT); 
+			if ((nVirtKey & SHIFTED) == 0) // if RIGHT shift key UP
 				vkKeys(VK_RSHIFT) = false;
 			break;
 		case VK_CONTROL:
-
+			nVirtKey = GetKeyState(VK_LCONTROL);
+			if ((nVirtKey & SHIFTED) == 0) // IF LEFT CONTROL 
+				vkKeys(VK_LCONTROL) = false;
+			nVirtKey = GetKeyState(VK_RCONTROL);
+			if ((nVirtKey &SHIFTED) == 0)	//If RIGHT control up
+				vkKeys[VK_RCONTROL] = false;
+			break;
 
 		}
 	}
