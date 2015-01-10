@@ -48,6 +48,22 @@
 
 
 
+/* EXPLANATION OF WINDOWS / C++ SPECIFIC CODE
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+DEVICE CONTEXT EXPLANATION - 
+"A device context is a Windows data structure containing information about the drawing attributes of a device such as a display or a printer. 
+All drawing calls are made through a device-context object, which encapsulates the Windows APIs for drawing lines, shapes, and text. 
+Device contexts allow device-independent drawing in Windows. Device contexts can be used to draw to the screen, to the printer, or to a metafile."
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+DEVICE HANDLE EXPLANATION - 
+A handle can be anything from an integer index to a pointer to a resource in kernel space. The idea is that they provide an abstraction of a resource, 
+so you don't need to know much about the resource itself to use it.
+For instance, the HWND in the Win32 API is a handle for a Window. By itself it's useless: you can't glean any information from it. But pass it to the right API functions,
+and you can perform a wealth of different tricks with it. Internally you can think of the HWND as just an index into the GUI's table of windows (which may not necessarily 
+be how it's implemented, but it makes the magic make sense).
+
+*/
+
 //Function Prototypes
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int);
 bool CreateMainWindow(HINSTANCE, int);
@@ -141,6 +157,18 @@ LRESULT WINAPI WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	switch (msg)
 	{
+	
+	case WM_CREATE:
+		//get the text metrics
+
+		hdc = GetDC(hWnd); //  Hdc is handler of the device context, DC  = device context
+		GetTextMetrics(hdc, &tm);
+		ReleaseDC(hWnd, hdc);
+		chWidth = tm.tmAveCharWidth;
+		chHeight = tm.tmHeight; //character height
+		return 0;
+
+
 	case WM_DESTROY:
 		// Tell Windows to kill this program
 		PostQuitMessage(0);
@@ -164,10 +192,24 @@ LRESULT WINAPI WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:					// Window needs to be redrawn
 		hdc = BeginPaint(hWnd, &ps); // Get Handle to device context
 		GetClientRect(hWnd, &rect);	 // Get the Window Rectangle
+		TextOut(hdc, 0, 0, &ch, 1);     // display the character
 
 		// Displaying the actual character
 
-		TextOut(hdc, rect.right / 2, rect.bottom / 2, &ch, 1);
+		for (int r = 0; r < 16; r++)
+		{
+			for (int c = 0; c < 16; c++)
+			{
+				if (vkKeys[r*16+c])
+				{
+					SetBkMode(hdc, OPAQUE);
+					TextOut(hdc, c*chWidth + chWidth * 2, r*chHeight + chHeight * 2, "T", 2);
+				}
+				else { SetBkMode(hdc, TRANSPARENT);
+				TextOut(hdc, c*chWidth + chWidth * 2, r*chHeight + chHeight * 2, "F", 2);
+				}
+			}
+		}
 		EndPaint(hWnd, &ps);
 		return 0;
 
@@ -228,6 +270,8 @@ LRESULT WINAPI WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		InvalidateRect(hWnd, NULL, TRUE);			// FORCE WM_PAINT
 		return 0;
 		break;
+
+	
 	}
 
 }
