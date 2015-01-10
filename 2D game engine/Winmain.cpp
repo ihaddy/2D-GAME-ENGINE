@@ -61,6 +61,7 @@ HDC hdc;
 TCHAR ch = ' ';
 RECT rect;
 PAINTSTRUCT ps;
+bool vkKeys[256];
 
 
 //Constants
@@ -87,10 +88,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//Declares an instance of the MSG class i think
 	MSG msg;
 
+
+
 	//Create the Window
 
 	if (!CreateMainWindow(hInstance, nCmdShow))
 		return false;
+
+
+	//Initialize values for the key array
+	for (int i = 0; i<256; i++)   // initialize virtual key array
+		vkKeys[i] = false;
+
 
 	//Main Message Loop
 
@@ -124,6 +133,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 LRESULT WINAPI WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 {
+	short nVirtKey;                 // virtual-key code 
+	const short SHIFTED = (short)0x8000;
+	TEXTMETRIC tm;                  // structure for text metrics 
+	DWORD chWidth = 20;             // width of characters
+	DWORD chHeight = 20;            // height of characters
+
 	switch (msg)
 	{
 	case WM_DESTROY:
@@ -161,54 +176,58 @@ LRESULT WINAPI WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 
 	case WM_KEYDOWN:		//KEY DOWN
-		vkKeyes(wParam) = true;
+		vkKeys[wParam] = true;
 		switch (wParam)
 		{
 		case VK_SHIFT:								// Shift Key
 			nVirtKey = GetKeyState(VK_LSHIFT);		//Get State of Left
 
 			if (nVirtKey & SHIFTED)					// If Left Shift
-				vkKeys(VK_LSHIFT) = true;
+				vkKeys[VK_LSHIFT] = true;
 			nVirtKey = GetKeyState(VK_RSHIFT);		// Get State of Right Shift
 
 			if (nVirtKey & SHIFTED)
-				vkKeys(VK_RSHIFT) = true;
+				vkKeys[VK_RSHIFT] = true;
 			break;
 		case VK_CONTROL: // Control key
 			nVirtKey = GetKeyState(VK_LCONTROL);
 			if (nVirtKey & SHIFTED)					// Left control
-				vkKeys(VK_LCONTROL) = true;
+				vkKeys[VK_LCONTROL] = true;
 			nVirtKey = GetKeyState(VK_RCONTROL);
 			if (nVirtKey & SHIFTED)					// Right Control
-				vkKeys(VK_RCONTROL) = true;
+				vkKeys[VK_RCONTROL] = true;
 			break;
 		}
 		InvalidateRect(hWnd, NULL, TRUE);			// FORCE WM_PAINT
 		return 0;
 		break;
 	case WM_KEYUP:								// Key UP
-		vkKeys(wParam) = false;
+		vkKeys[wParam] = false;
 
 		switch (wParam)
 		{
 		case VK_SHIFT:
 			nVirtKey = GetKeyState(VK_LSHIFT);
 			if ((nVirtKey & SHIFTED) == 0) //if LEFT shift key UP
-				vkKeys(VK_LCONTROL) = false;
+				vkKeys[VK_LSHIFT] = false;
 			nVirtKey = GetKeyState(VK_RSHIFT); 
 			if ((nVirtKey & SHIFTED) == 0) // if RIGHT shift key UP
-				vkKeys(VK_RSHIFT) = false;
+				vkKeys[VK_RSHIFT] = false;
 			break;
 		case VK_CONTROL:
 			nVirtKey = GetKeyState(VK_LCONTROL);
 			if ((nVirtKey & SHIFTED) == 0) // IF LEFT CONTROL 
-				vkKeys(VK_LCONTROL) = false;
+				vkKeys[VK_LCONTROL] = false;
 			nVirtKey = GetKeyState(VK_RCONTROL);
 			if ((nVirtKey &SHIFTED) == 0)	//If RIGHT control up
 				vkKeys[VK_RCONTROL] = false;
 			break;
 
 		}
+		
+		InvalidateRect(hWnd, NULL, TRUE);			// FORCE WM_PAINT
+		return 0;
+		break;
 	}
 
 }
