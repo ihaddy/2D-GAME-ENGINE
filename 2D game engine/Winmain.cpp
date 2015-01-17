@@ -1,7 +1,16 @@
 // Winmain.cpp
 
+#define _CRTDBG_MAP_ALLOC //Detecting of memory leaks
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#include <stdlib.h> //for detecting memory leaks
+#include <crtdbg.h> //for detecting memory leaks
+
+
+
+
+
+
 
 #define VK_SHIFT 0x10
 #define VK_CONTROL 0x11
@@ -83,7 +92,7 @@ bool vkKeys[256];
 //Constants
 
 const char CLASS_NAME[] = "WinMain";
-const char APP_TITLE[] = "Hello World";
+const char APP_TITLE[] = "DirectX Window";
 const int WINDOW_WIDTH = 400;
 const int WINDOW_HEIGHT = 400;
 
@@ -349,3 +358,4 @@ bool AnotherInstance()
 	
 	return false; //If not, that means We are the only instance of the game engine that is running
 }
+
