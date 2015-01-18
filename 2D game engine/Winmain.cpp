@@ -351,7 +351,7 @@ bool AnotherInstance()
 {
 	HANDLE ourMutex;
 	//Attempt to create a mutex using our unique string
-	ourMutex = CreateMutex(NULL, true, "Use_a_different_string_here_for_each_program_48161-\_XYZZY");
+	ourMutex = CreateMutex(NULL, true, "Use_a_different_string_here_for_each_program_48161-/_XYZZY");
 
 	if (GetLastError() == ERROR_ALREADY_EXISTS)
 		return true;	//meaning another instance of the program ( the game) was found
