@@ -32,8 +32,11 @@ class Graphics{
 
 	//these are private, and only the graphics class itself can access them
 	//ALTHOUGH ALL PRIVATE VARIABLES ARE TRANSFERRED TO ANY INHERITANCES, THEY ARE JUST NO EDITABLE IN THE INHERITANCE
+	// on a final note, the private members ARE accessible from WITHIN the public members of the graphics class
+
 private: 
-// The points for directX
+
+// The pointers for directX
 	LP_3D	direct2d;
 	LP_3DDEVICE device3d;
 	D3DPRESENT_PARAMETERS d3dpp;

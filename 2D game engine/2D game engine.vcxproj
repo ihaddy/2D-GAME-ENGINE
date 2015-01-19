@@ -81,6 +81,7 @@
     <ClCompile Include="Winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gameError.h" />
     <ClInclude Include="graphics.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
