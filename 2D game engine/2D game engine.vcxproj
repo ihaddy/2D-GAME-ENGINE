@@ -81,6 +81,7 @@
     <ClCompile Include="Winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="constants.h" />
     <ClInclude Include="gameError.h" />
     <ClInclude Include="graphics.h" />
   </ItemGroup>
